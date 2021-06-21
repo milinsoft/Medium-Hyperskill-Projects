@@ -21,67 +21,59 @@ def print_results():
     physics_accepted = sorted(physics_accepted, key=lambda x: (-(x[2] + x[4]) / 2, x[0], x[1]))  # DONE -x[2] for physics -x[4] for math | x[2] + x[4] / 2 - for print
     mathematics_accepted = sorted(mathematics_accepted, key=lambda x: (-x[4], x[0], x[1]))  # DONE -x[4] for math; NO CHANGES REQUIRED (STAGE 6)
 
-    # write results into individual files
-
-    with open('biotech.txt', 'w') as biotech_file:
-        for applicant in biotech_accepted:
-            f1 = [applicant[0], applicant[1], str((applicant[2] + applicant[3]) / 2)]
-            f1 = " ".join(f1)
-            print(f1)
-            biotech_file.write(f1 + '\n')
-
-    with open('chemistry.txt', 'w') as chemistry_file:
-        for applicant in chemistry_accepted:
-            f2 = [applicant[0], applicant[1], str(applicant[3])]
-            f2 = " ".join(f2)
-            chemistry_file.write(f2 + '\n')
-
-    with open('engineering.txt', 'w') as engineering_file:
-        for applicant in engineering_accepted:
-            f3 = [applicant[0], applicant[1], str((applicant[5] + applicant[4]) / 2)]
-            f3 = " ".join(f3)
-            engineering_file.write(f3 + '\n')
-
-    with open('mathematics.txt', 'w') as mathematics_file:
-        for applicant in mathematics_accepted:
-            f4 = [applicant[0], applicant[1], str(applicant[4])]
-            f4 = " ".join(f4)
-            mathematics_file.write(f4 + '\n')
-
-    with open('physics.txt', 'w') as physics_file:
-        for applicant in physics_accepted:
-            f5 = [applicant[0], applicant[1], str((applicant[2] + applicant[4]) / 2)]
-            f5 = " ".join(f5)
-            physics_file.write(f5 + '\n')
-
     if len(biotech_accepted) > 0:
         print("Biotech")
-        for applicant in biotech_accepted:
-            print(*applicant[0:2], (applicant[3] + applicant[2]) / 2)  # updated index for chemistry exam
+        # write results into individual files + print
+        with open('biotech.txt', 'w') as biotech_file:
+            for applicant in biotech_accepted:
+                f1 = [applicant[0], applicant[1], str((applicant[2] + applicant[3]) / 2)]
+                f1 = " ".join(f1)
+                biotech_file.write(f1 + '\n')
+                print(*applicant[0:2], (applicant[3] + applicant[2]) / 2)  # updated index for chemistry exam
         print()
 
     if len(chemistry_accepted) > 0:
         print("Chemistry")
-        for applicant in chemistry_accepted:
-            print(*applicant[0:2], applicant[3])  # updated index for chemistry exam
+        # write results into individual files + print
+        with open('chemistry.txt', 'w') as chemistry_file:
+            for applicant in chemistry_accepted:
+                f2 = [applicant[0], applicant[1], str(applicant[3])]
+                f2 = " ".join(f2)
+                chemistry_file.write(f2 + '\n')
+                print(*applicant[0:2], applicant[3])  # updated index for chemistry exam
         print()
 
     if len(engineering_accepted) > 0:
         print("Engineering")
-        for applicant in engineering_accepted:
-            print(*applicant[0:2], (applicant[5] + applicant[4]) / 2)
+        with open('engineering.txt', 'w') as engineering_file:
+            # write results into individual files + print
+            for applicant in engineering_accepted:
+                f3 = [applicant[0], applicant[1], str((applicant[5] + applicant[4]) / 2)]
+                f3 = " ".join(f3)
+                engineering_file.write(f3 + '\n')
+                print(*applicant[0:2], (applicant[5] + applicant[4]) / 2)
         print()
 
     if len(mathematics_accepted) > 0:
         print("Mathematics")
-        for applicant in mathematics_accepted:
-            print(*applicant[0:2], applicant[4])  # updated index for math exam
+        # write results into individual files + print
+        with open('mathematics.txt', 'w') as mathematics_file:
+            for applicant in mathematics_accepted:
+                f4 = [applicant[0], applicant[1], str(applicant[4])]
+                f4 = " ".join(f4)
+                mathematics_file.write(f4 + '\n')
+                print(*applicant[0:2], applicant[4])  # updated index for math exam
         print()
 
     if len(physics_accepted) > 0:
         print("Physics")
-        for applicant in physics_accepted:
-            print(*applicant[0:2], (applicant[2] + applicant[4]) / 2)  # updated index for physics exam
+        # write results into individual files + print
+        with open('physics.txt', 'w') as physics_file:
+            for applicant in physics_accepted:
+                f5 = [applicant[0], applicant[1], str((applicant[2] + applicant[4]) / 2)]
+                f5 = " ".join(f5)
+                physics_file.write(f5 + '\n')
+                print(*applicant[0:2], (applicant[2] + applicant[4]) / 2)  # updated index for physics exam
         print()
 
 
