@@ -1,23 +1,4 @@
 # University Admission Application
-
-def sorting_applicants(applicants_data):
-    sorted_results = sorted(applicants_data)
-    sorted_results = sorted(sorted_results, key=lambda x: (x[3], -x[2]))
-    return sorted_results
-
-
-def sorting_second_priority(applicants_data):
-    sorted_results = sorted(applicants_data)
-    sorted_results = sorted(sorted_results, key=lambda x: (x[4], -x[2]))
-    return sorted_results
-
-
-def sorting_third_priority(applicants_data):
-    sorted_results = sorted(applicants_data)
-    sorted_results = sorted(sorted_results, key=lambda x: (x[5], -x[2]))
-    return sorted_results
-
-
 def selection(department_accepted, department):
 
     if len(department_accepted) < max_students_per_department:
@@ -34,39 +15,39 @@ def selection(department_accepted, department):
 
 def print_results():
     global biotech_accepted, engineering_accepted, chemistry_accepted, physics_accepted, mathematics_accepted
-    biotech_accepted = sorted(biotech_accepted, key=lambda x: (-x[2], x[0], x[1]))
-    engineering_accepted = sorted(engineering_accepted, key=lambda x: (-x[2], x[0], x[1]))
-    chemistry_accepted = sorted(chemistry_accepted, key=lambda x: (-x[2], x[0], x[1]))
-    physics_accepted = sorted(physics_accepted, key=lambda x: (-x[2], x[0], x[1]))
-    mathematics_accepted = sorted(mathematics_accepted, key=lambda x: (-x[2], x[0], x[1]))
+    biotech_accepted = sorted(biotech_accepted, key=lambda x: (-x[3], x[0], x[1]))  # sorting algorithm changed for stage 5 -x[3] for biotech
+    engineering_accepted = sorted(engineering_accepted, key=lambda x: (-x[5], x[0], x[1]))  # sorting algorithm changed for stage 5 -x[5] for engineering
+    chemistry_accepted = sorted(chemistry_accepted, key=lambda x: (-x[3], x[0], x[1]))  # sorting algorithm changed for stage 5 -x[3] for chemistry
+    physics_accepted = sorted(physics_accepted, key=lambda x: (-x[2], x[0], x[1]))  # sorting algorithm changed for stage 5 -x[2] for physics
+    mathematics_accepted = sorted(mathematics_accepted, key=lambda x: (-x[4], x[0], x[1]))  # sorting algorithm changed for stage 5 -x[4] for math
     if len(biotech_accepted) > 0:
         print("Biotech")
         for applicant in biotech_accepted:
-            print(*applicant[0:3])
+            print(*applicant[0:2],applicant[3])  # updated index for chemistry exam
         print()
 
     if len(chemistry_accepted) > 0:
         print("Chemistry")
         for applicant in chemistry_accepted:
-            print(*applicant[0:3])
+            print(*applicant[0:2],applicant[3])  # updated index for chemistry exam
         print()
 
     if len(engineering_accepted) > 0:
         print("Engineering")
         for applicant in engineering_accepted:
-            print(*applicant[0:3])
+            print(*applicant[0:2],applicant[5])  # updated index for computer science exam
         print()
 
     if len(mathematics_accepted) > 0:
         print("Mathematics")
         for applicant in mathematics_accepted:
-            print(*applicant[0:3])
+            print(*applicant[0:2],applicant[4])  # updated index for math exam
         print()
 
     if len(physics_accepted) > 0:
         print("Physics")
         for applicant in physics_accepted:
-            print(*applicant[0:3])
+            print(*applicant[0:2],applicant[2])  # updated index for physics exam
         print()
 
 
@@ -87,6 +68,14 @@ def split_and_invoke_selection(sorted_selection_list, index):  # + clear as the 
     physics = [person for person in sorted_selection_list if person[index] == "Physics"]
     mathematics = [person for person in sorted_selection_list if person[index] == "Mathematics"]
 
+    # sorting:
+    biotech = sorted(biotech, key=lambda x: (-x[3], x[0], x[1]))  # sorting algorithm changed for stage 5 -x[3] for biotech
+    engineering = sorted(engineering, key=lambda x: (-x[5], x[0], x[1]))  # sorting algorithm changed for stage 5 -x[5] for engineering
+    chemistry = sorted(chemistry, key=lambda x: (-x[3], x[0], x[1]))  # sorting algorithm changed for stage 5 -x[3] for chemistry
+    physics = sorted(physics, key=lambda x: (-x[2], x[0], x[1]))  # sorting algorithm changed for stage 5 -x[2] for physics
+    mathematics = sorted(mathematics, key=lambda x: (-x[4], x[0], x[1]))  # sorting algorithm changed for stage 5 -x[4] for math
+
+
     # select
     selection(biotech_accepted, biotech)
     selection(engineering_accepted, engineering)
@@ -103,7 +92,8 @@ with open('applicants.txt') as file:
     applicants = [applicant.split() for applicant in file.readlines()]
 # step #2 converting GPA str values to float
 for value in applicants:
-    value[2] = float(value[2])
+    for i in range(2,6):
+        value[i] = float(value[i])
 
 
 # PRE SELECTION
@@ -126,8 +116,10 @@ selection_round = 1  # default value
 
 while selection_round <= 3:
     if selection_round == 1:
-        first_round_list = sorting_applicants(applicants)
-        split_and_invoke_selection(first_round_list, 3)  # index 3 for the 1st priority
+        #first_round_list = sorting_applicants(applicants)
+
+        first_round_list = [applicant for applicant in applicants]
+        split_and_invoke_selection(first_round_list, 6)  # index 3 for the 1st priority
         selection_round += 1
         del first_round_list  # deleting from memory
         if all([len(biotech_accepted) == max_students_per_department, len(engineering_accepted) == max_students_per_department, len(chemistry_accepted) == max_students_per_department, len(physics_accepted) == max_students_per_department, len(mathematics_accepted) == max_students_per_department]):
@@ -138,8 +130,8 @@ while selection_round <= 3:
 
     if selection_round == 2:
         second_round_list = [*biotech, *engineering, *chemistry, *physics, *mathematics]
-        second_round_list = sorting_second_priority(second_round_list)
-        split_and_invoke_selection(second_round_list, 4)  # index 4 for the 2nd priority
+        # second_round_list = sorting_second_priority(second_round_list)
+        split_and_invoke_selection(second_round_list, 7)  # index 4 for the 2nd priority
         selection_round += 1
         del second_round_list  # deleting from memory
         if all([len(biotech_accepted) == max_students_per_department, len(engineering_accepted) == max_students_per_department, len(chemistry_accepted) == max_students_per_department, len(physics_accepted) == max_students_per_department, len(mathematics_accepted) == max_students_per_department]):
@@ -151,8 +143,10 @@ while selection_round <= 3:
     if selection_round == 3:
         # step #8 obtaining the list for the last tour:
         last_round_list = [*biotech, *engineering, *chemistry, *physics, *mathematics]  # unpacking lists with * asterisk sign
-        last_round_list = sorting_third_priority(last_round_list)
-        split_and_invoke_selection(last_round_list, 5)  # index 5 for the 3rd (last) priority
+        #last_round_list = sorting_third_priority(last_round_list)
+        split_and_invoke_selection(last_round_list, 8)  # index 5 for the 3rd (last) priority
         del last_round_list  # deleting from memory
         print_results()
         exit()
+
+#  exams: physics, chemistry, math, computer science
