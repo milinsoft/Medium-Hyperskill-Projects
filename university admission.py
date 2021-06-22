@@ -15,21 +15,24 @@ def selection(department_accepted, department):
 
 def print_results():
     global biotech_accepted, engineering_accepted, chemistry_accepted, physics_accepted, mathematics_accepted
-    biotech_accepted = sorted(biotech_accepted, key=lambda x: (-(x[3] + x[2]) / 2, x[0], x[1]))  # -x[3] for biology -x[2] for physics | (x[3] + x[2]) / 2 - for print
-    engineering_accepted = sorted(engineering_accepted, key=lambda x: (-(x[5]+x[4]) / 2, x[0], x[1]))  # DONE -x[5] for computer science, -x[4] for math | (x[5]+x[4]) / 2 - for print
-    chemistry_accepted = sorted(chemistry_accepted, key=lambda x: (-x[3], x[0], x[1]))  # DONE -x[3] for chemistry; NO CHANGES REQUIRED (STAGE 6)
-    physics_accepted = sorted(physics_accepted, key=lambda x: (-(x[2] + x[4]) / 2, x[0], x[1]))  # DONE -x[2] for physics -x[4] for math | x[2] + x[4] / 2 - for print
-    mathematics_accepted = sorted(mathematics_accepted, key=lambda x: (-x[4], x[0], x[1]))  # DONE -x[4] for math; NO CHANGES REQUIRED (STAGE 6)
+    biotech_accepted = sorted(biotech_accepted, key=lambda x: (-max(((x[3] + x[2]) / 2), x[6]), x[0], x[1]))  # -x[3] for biology -x[2] for physics | (x[3] + x[2]) / 2 - for print
+    engineering_accepted = sorted(engineering_accepted, key=lambda x: (-max(((x[5]+x[4]) / 2), x[6]), x[0], x[1]))  # DONE -x[5] for computer science, -x[4] for math | (x[5]+x[4]) / 2 - for print
+    chemistry_accepted = sorted(chemistry_accepted, key=lambda x: (-max(x[3], x[6]), x[0], x[1]))  # DONE -x[3] for chemistry; NO CHANGES REQUIRED (STAGE 6)
+    physics_accepted = sorted(physics_accepted, key=lambda x: (-max(((x[2] + x[4]) / 2), x[6]), x[0], x[1]))  # DONE -x[2] for physics -x[4] for math | x[2] + x[4] / 2 - for print
+    mathematics_accepted = sorted(mathematics_accepted, key=lambda x: (-max(x[4], x[6]), x[0], x[1]))  # DONE -x[4] for math; NO CHANGES REQUIRED (STAGE 6)
+
 
     if len(biotech_accepted) > 0:
         print("Biotech")
         # write results into individual files + print
         with open('biotech.txt', 'w') as biotech_file:
             for applicant in biotech_accepted:
-                f1 = [applicant[0], applicant[1], str((applicant[2] + applicant[3]) / 2)]
+                mean_score = (applicant[2] + applicant[3]) / 2
+                best_score = max(mean_score, applicant[6])
+                f1 = [applicant[0], applicant[1], str(best_score)]
                 f1 = " ".join(f1)
                 biotech_file.write(f1 + '\n')
-                print(*applicant[0:2], (applicant[3] + applicant[2]) / 2)  # updated index for chemistry exam
+                print(*applicant[0:2], best_score)  # updated index for chemistry exam
         print()
 
     if len(chemistry_accepted) > 0:
@@ -37,10 +40,10 @@ def print_results():
         # write results into individual files + print
         with open('chemistry.txt', 'w') as chemistry_file:
             for applicant in chemistry_accepted:
-                f2 = [applicant[0], applicant[1], str(applicant[3])]
+                f2 = [applicant[0], applicant[1], str(max(applicant[3], applicant[6]))]
                 f2 = " ".join(f2)
                 chemistry_file.write(f2 + '\n')
-                print(*applicant[0:2], applicant[3])  # updated index for chemistry exam
+                print(*applicant[0:2], max(applicant[3], applicant[6]))  # updated index for chemistry exam
         print()
 
     if len(engineering_accepted) > 0:
@@ -48,10 +51,10 @@ def print_results():
         with open('engineering.txt', 'w') as engineering_file:
             # write results into individual files + print
             for applicant in engineering_accepted:
-                f3 = [applicant[0], applicant[1], str((applicant[5] + applicant[4]) / 2)]
+                f3 = [applicant[0], applicant[1], str(max(((applicant[5] + applicant[4]) / 2), applicant[6]))]
                 f3 = " ".join(f3)
                 engineering_file.write(f3 + '\n')
-                print(*applicant[0:2], (applicant[5] + applicant[4]) / 2)
+                print(*applicant[0:2], max(((applicant[5] + applicant[4]) / 2), applicant[6]))
         print()
 
     if len(mathematics_accepted) > 0:
@@ -59,10 +62,10 @@ def print_results():
         # write results into individual files + print
         with open('mathematics.txt', 'w') as mathematics_file:
             for applicant in mathematics_accepted:
-                f4 = [applicant[0], applicant[1], str(applicant[4])]
+                f4 = [applicant[0], applicant[1], str(max(applicant[4], applicant[6]))]
                 f4 = " ".join(f4)
                 mathematics_file.write(f4 + '\n')
-                print(*applicant[0:2], applicant[4])  # updated index for math exam
+                print(*applicant[0:2], max(applicant[4], applicant[6]))  # updated index for math exam
         print()
 
     if len(physics_accepted) > 0:
@@ -70,10 +73,10 @@ def print_results():
         # write results into individual files + print
         with open('physics.txt', 'w') as physics_file:
             for applicant in physics_accepted:
-                f5 = [applicant[0], applicant[1], str((applicant[2] + applicant[4]) / 2)]
+                f5 = [applicant[0], applicant[1], str(max(((applicant[2] + applicant[4]) / 2), applicant[6]))]
                 f5 = " ".join(f5)
                 physics_file.write(f5 + '\n')
-                print(*applicant[0:2], (applicant[2] + applicant[4]) / 2)  # updated index for physics exam
+                print(*applicant[0:2], max(((applicant[2] + applicant[4]) / 2), applicant[6]))  # updated index for physics exam
         print()
 
 
@@ -95,11 +98,11 @@ def split_and_invoke_selection(sorted_selection_list, index):  # + clear as the 
     mathematics = [person for person in sorted_selection_list if person[index] == "Mathematics"]
 
     # sorting:
-    biotech = sorted(biotech, key=lambda x: (-(x[3] + x[2]) / 2, x[0], x[1]))  # -x[3] for biology -x[2] for physics | (x[3] + x[2]) / 2 - for print
-    engineering = sorted(engineering, key=lambda x: (-(x[5]+x[4]) / 2, x[0], x[1]))  # DONE -x[5] for computer science, -x[4] for math | (x[5]+x[4]) / 2 - for print
-    chemistry = sorted(chemistry, key=lambda x: (-x[3], x[0], x[1]))  # DONE -x[3] for chemistry; NO CHANGES REQUIRED (STAGE 6)
-    physics = sorted(physics, key=lambda x: (-(x[2] + x[4]) / 2, x[0], x[1]))  # DONE -x[2] for physics -x[4] for math | x[2] + x[4] / 2 - for print
-    mathematics = sorted(mathematics, key=lambda x: (-x[4], x[0], x[1]))  # DONE -x[4] for math; NO CHANGES REQUIRED (STAGE 6)
+    biotech = sorted(biotech, key=lambda x: (-max(((x[3] + x[2]) / 2), x[6]), x[0], x[1]))  # -x[3] for biology -x[2] for physics | (x[3] + x[2]) / 2 - for print
+    engineering = sorted(engineering, key=lambda x: (-max(((x[5]+x[4]) / 2), x[6]), x[0], x[1]))  # DONE -x[5] for computer science, -x[4] for math | (x[5]+x[4]) / 2 - for print
+    chemistry = sorted(chemistry, key=lambda x: (-max(x[3],x[6]), x[0], x[1]))  # DONE -x[3] for chemistry; NO CHANGES REQUIRED (STAGE 6)
+    physics = sorted(physics, key=lambda x: (-max(((x[2] + x[4]) / 2), x[6]), x[0], x[1]))  # DONE -x[2] for physics -x[4] for math | x[2] + x[4] / 2 - for print
+    mathematics = sorted(mathematics, key=lambda x: (-max(x[4], x[6]), x[0], x[1]))  # DONE -x[4] for math; NO CHANGES REQUIRED (STAGE 6)
 
     # select
     selection(biotech_accepted, biotech)
@@ -117,7 +120,7 @@ with open('applicants.txt', 'r') as file:
     applicants = [applicant.split() for applicant in file.readlines()]
 # step #2 converting GPA str values to float
 for value in applicants:
-    for i in range(2, 6):
+    for i in range(2, 7):
         value[i] = float(value[i])
 
 
@@ -142,7 +145,7 @@ selection_round = 1  # default value
 while selection_round <= 3:
     if selection_round == 1:
         first_round_list = [applicant for applicant in applicants]
-        split_and_invoke_selection(first_round_list, 6)  # index 3 for the 1st priority
+        split_and_invoke_selection(first_round_list, 7)  # index 3 for the 1st priority
         selection_round += 1
         del first_round_list  # deleting from memory
         if all([len(biotech_accepted) == max_students_per_department, len(engineering_accepted) == max_students_per_department, len(chemistry_accepted) == max_students_per_department, len(physics_accepted) == max_students_per_department, len(mathematics_accepted) == max_students_per_department]):
@@ -154,7 +157,7 @@ while selection_round <= 3:
     if selection_round == 2:
         second_round_list = [*biotech, *engineering, *chemistry, *physics, *mathematics]
         # second_round_list = sorting_second_priority(second_round_list)
-        split_and_invoke_selection(second_round_list, 7)  # index 4 for the 2nd priority
+        split_and_invoke_selection(second_round_list, 8)  # index 4 for the 2nd priority
         selection_round += 1
         del second_round_list  # deleting from memory
         if all([len(biotech_accepted) == max_students_per_department, len(engineering_accepted) == max_students_per_department, len(chemistry_accepted) == max_students_per_department, len(physics_accepted) == max_students_per_department, len(mathematics_accepted) == max_students_per_department]):
@@ -166,7 +169,7 @@ while selection_round <= 3:
     if selection_round == 3:
         # step #8 obtaining the list for the last tour:
         last_round_list = [*biotech, *engineering, *chemistry, *physics, *mathematics]  # unpacking lists with * asterisk sign
-        split_and_invoke_selection(last_round_list, 8)  # index 5 for the 3rd (last) priority
+        split_and_invoke_selection(last_round_list, 9)  # index 5 for the 3rd (last) priority
         del last_round_list  # deleting from memory
         print_results()
         exit()
@@ -179,3 +182,6 @@ while selection_round <= 3:
 
 #
 # create files with results.
+
+
+#+ 1 index for all priorities
